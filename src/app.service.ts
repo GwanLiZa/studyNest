@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Book } from './book'
-import { bookDto } from './dto';
+import { Book } from './entity/book.entity'
+import { BookDto } from './dto/book.dto';
 
 @Injectable()
 export class AppService {
@@ -18,7 +18,7 @@ export class AppService {
     return book;
   }
 
-  create(bookData: bookDto) {
+  create(bookData: BookDto) {
     this.books.push({
         id: this.books.length + 1,
         ...bookData
