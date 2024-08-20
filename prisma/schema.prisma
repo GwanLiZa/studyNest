@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Book {
-  id     Int      @id
+  id     Int      @id //@default(autoincrement())
   title  String
   year   Int
   genres String[]
