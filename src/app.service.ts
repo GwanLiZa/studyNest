@@ -23,23 +23,52 @@ export class AppService {
   }
 
   async create(bookData: BookDto): Promise<Book> {
-    const lastBook = await this.prisma.book.findFirst({
-      orderBy: {
-        id: 'desc',
-      },
-      select: {
-        id: true,
-      },
-    });
 
-    const newId = lastBook ? lastBook.id + 1 : 1;
+    // const genres = await Promise.all(
+    //   bookData.genres.map(
+    //     async (genreName) => {
+    //       let genre = await this.prisma.genre.findFirst({
+    //         where: { genre: genreName },
+    //       });
 
-    return this.prisma.book.create({
-      data: {
-        id: newId,
-        ...bookData
+    //       if (!genre) {
+    //         genre = await this.prisma.genre.create({
+    //           data: { genre: genreName },
+    //         });
+    //       }
+    //       return genre
+    //     }
+    //   )
+    // );
+
+    const newBook = await this.prisma.book.create({
+      data:{
+        title: bookData.title,
+        year: bookData.year,
+        // genres: bookData.genres
+        genres: {
+          create: bookData.genres.map(g => ({
+            genre: {
+              connectOrCreate: { where: { genre: g }, create: { genre: g}}
+            }
+          }))
+        }
       }
     });
+
+    // await Promise.all(
+    //   genres.map(
+    //     async (genre) => {
+    //       await this.prisma.genresOnBooks.create({
+    //         data: {
+    //           bookId: (await newBook).id,
+    //           genreId: genre.id,
+    //         },
+    //       });
+    //   })
+    // );
+
+    return newBook
   }
 
   async remove(bookId: string) : Promise<boolean> {

@@ -14,8 +14,23 @@ datasource db {
 }
 
 model Book {
-  id     Int      @id //@default(autoincrement())
+  id     Int             @id @default(autoincrement())
   title  String
   year   Int
-  genres String[]
+  genres GenresOnBooks[]
+}
+
+model Genre {
+  id    Int             @id @default(autoincrement())
+  genre String          @unique
+  books GenresOnBooks[]
+}
+
+model GenresOnBooks {
+  book    Book  @relation(fields: [bookId], references: [id])
+  bookId  Int
+  genre   Genre @relation(fields: [genreId], references: [id])
+  genreId Int
+
+  @@id([bookId, genreId])
 }
