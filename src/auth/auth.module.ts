@@ -19,10 +19,6 @@ import { ConfigService } from '@nestjs/config';
       }),
       inject: [ConfigService],
     })
-    // JwtModule.register({
-    //   secret: configService.get('DATABASE_URL'),
-    //   signOptions: { expiresIn: '60m' },
-    // }),
   ],
   controllers: [AuthController],
   providers: [AuthService, PrismaService, JwtStrategy],
